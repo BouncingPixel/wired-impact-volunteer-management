@@ -14,7 +14,7 @@ $options = new WI_Volunteer_Management_Options();
 $use_honeypot = $options->get_option( 'use_honeypot' );
 ?>
 
-<h3><?php ( $opp->opp_meta['one_time_opp'] == 1 ) ? _e( 'Register Below', 'wired-impact-volunteer-management' ) : _e( 'Express Interest in Volunteering', 'wired-impact-volunteer-management' ) ; ?></h3>
+<h3><?php ( $opp->opp_meta['one_time_opp'] == 1 ) ? _e( 'Register Below', 'wired-impact-volunteer-management' ) : _e( 'Register Below', 'wired-impact-volunteer-management' ) ; ?></h3>
 
 <?php if( $opp->should_allow_rvsps() ): ?>
 <div class="loading volunteer-opp-message"><?php _e( 'Please wait...', 'wired-impact-volunteer-management' ); ?></div>
@@ -48,8 +48,8 @@ $use_honeypot = $options->get_option( 'use_honeypot' );
 	<?php do_action( 'wivm_end_sign_up_form_fields', $post ); ?>
 
 	<input type="hidden" id="wivm_opportunity_id" name="wivm_opportunity_id" value="<?php echo the_ID(); ?>" />
-	<input type="submit" tabindex="950" value="<?php ( $opp->opp_meta['one_time_opp'] == 1 ) ? _e( 'Sign Up', 'wired-impact-volunteer-management' ) : _e( 'Express Interest', 'wired-impact-volunteer-management' ) ; ?>" />
+	<input type="submit" tabindex="950" value="<?php ( $opp->opp_meta['one_time_opp'] == 1 ) ? _e( 'Sign Up', 'wired-impact-volunteer-management' ) : _e( 'Sign Up', 'wired-impact-volunteer-management' ) ; ?>" />
 </form>
 <?php else: ?>
-	<p><?php _e( 'We\'re sorry, but we\'re no longer accepting new volunteers for this opportunity.', 'wired-impact-volunteer-management' ); ?></p>
+	<p><?php _e( 'We\'re sorry, but we\'re no longer accepting new signups for this opportunity.', 'wired-impact-volunteer-management' ); ?></p>
 <?php endif; ?>
