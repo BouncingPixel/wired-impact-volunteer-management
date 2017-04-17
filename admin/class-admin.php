@@ -937,7 +937,8 @@ class WI_Volunteer_Management_Admin {
 				$query->query_vars['meta_query'] = array( $query_args );
 
 				// Set one-time opp date based queries
-				if ( 'flexible' != $_GET['opportunities'] ) {
+				// BP: remove if statement so all opportunities are <sorted></sorted>
+				// if ( 'flexible' != $_GET['opportunities'] ) {
 					$date_args = array(
 						'key' 		=> '_end_date_time',
 						'value' 	=> current_time( 'timestamp' ),
@@ -945,7 +946,7 @@ class WI_Volunteer_Management_Admin {
 					);
 
 					$query->query_vars['meta_query'] = array( $query_args, $date_args );
-				}
+				// }
 			}
 
 			// Set the initial sort order
@@ -987,17 +988,17 @@ class WI_Volunteer_Management_Admin {
 		// Upcoming one-time opportunities
 		$class = ( isset( $_GET['opportunities'] ) && 'upcoming_one_time' == $_GET['opportunities'] ) ? 'current' : '';
 		$upcoming_one_time_query = esc_url( add_query_arg( 'opportunities', urlencode( 'upcoming_one_time' ), $stripped_query_args ) );
-		$new_views['upcoming_one_time'] = sprintf( '<a href="%s" class="%s">%s</a>', $upcoming_one_time_query, $class, __( 'Upcoming One-time Opportunities', 'wired-impact-volunteer-management' ) );
+		$new_views['upcoming_one_time'] = sprintf( '<a href="%s" class="%s">%s</a>', $upcoming_one_time_query, $class, __( 'Upcoming Practices', 'wired-impact-volunteer-management' ) );
 
 		// Past one-time opportunities
-		$class = ( isset( $_GET['opportunities'] ) && 'past_one_time' == $_GET['opportunities'] ) ? 'current' : '';
-		$past_one_time_query = esc_url( add_query_arg( 'opportunities', urlencode( 'past_one_time' ), $stripped_query_args ) );
-		$new_views['past_one_time'] = sprintf( '<a href="%s" class="%s">%s</a>', $past_one_time_query, $class, __( 'Past One-time Opportunities', 'wired-impact-volunteer-management' ) );
+		// $class = ( isset( $_GET['opportunities'] ) && 'past_one_time' == $_GET['opportunities'] ) ? 'current' : '';
+		// $past_one_time_query = esc_url( add_query_arg( 'opportunities', urlencode( 'past_one_time' ), $stripped_query_args ) );
+		// $new_views['past_one_time'] = sprintf( '<a href="%s" class="%s">%s</a>', $past_one_time_query, $class, __( 'Past One-time Opportunities', 'wired-impact-volunteer-management' ) );
 
 		// Flexible opportunities
 		$class = ( isset( $_GET['opportunities'] ) && 'flexible' == $_GET['opportunities'] ) ? 'current' : '';
 		$flexible_query = esc_url( add_query_arg( 'opportunities', urlencode( 'flexible' ), $stripped_query_args ) );
-		$new_views['flexible'] = sprintf( '<a href="%s" class="%s">%s</a>', $flexible_query, $class, __( 'Flexible Opportunities', 'wired-impact-volunteer-management' ) );
+		$new_views['flexible'] = sprintf( '<a href="%s" class="%s">%s</a>', $flexible_query, $class, __( 'Upcoming Events', 'wired-impact-volunteer-management' ) );
 
 		// Remove and replace the default views array with the new views array
 		array_splice( $views, 0, 1, $new_views );
