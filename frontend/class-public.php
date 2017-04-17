@@ -73,16 +73,16 @@ class WI_Volunteer_Management_Public {
 	/**
 	 * Hide the honeypot field for the volunteer sign up form.
 	 *
-	 * We load this CSS separately to be sure the field is hidden even if the 
+	 * We load this CSS separately to be sure the field is hidden even if the
 	 * admin has turned off loading the CSS within the settings.
 	 */
 	public function enqueue_honeypot_styles(){
 
 		if( is_singular( 'volunteer_opp' ) ): ?>
-		
+
 		<style>
 			/* Hide the Wired Impact Volunteer Management honeypot field under all circumstances */
-			.wivm_hp { 
+			.wivm_hp {
 				display: none !important;
 			    position: absolute !important;
 			    left: -9000px;
@@ -108,7 +108,7 @@ class WI_Volunteer_Management_Public {
 	/**
 	 * Register our Volunteer Opportunities post type.
 	 *
-	 * Register our Volunteer Opportunities post type and set the method to static so that 
+	 * Register our Volunteer Opportunities post type and set the method to static so that
 	 * it can be called during activation when we need to refresh the rewrite rules.
 	 */
 	public static function register_post_types(){
@@ -124,7 +124,7 @@ class WI_Volunteer_Management_Public {
 	      'view_item' 			=> __( 'View Volunteer Opportunity', 'wired-impact-volunteer-management' ),
 	      'search_items' 		=> __( 'Search Volunteer Opportunities', 'wired-impact-volunteer-management' ),
 	      'not_found' 			=> __( 'No volunteer opportunities found', 'wired-impact-volunteer-management' ),
-	      'not_found_in_trash' 	=> __( 'No volunteer opportunities found in trash', 'wired-impact-volunteer-management' ), 
+	      'not_found_in_trash' 	=> __( 'No volunteer opportunities found in trash', 'wired-impact-volunteer-management' ),
 	      'parent_item_colon' 	=> '',
 	      'menu_name' 			=> __( 'Volunteer Mgmt', 'wired-impact-volunteer-management' )
 	    );
@@ -138,8 +138,8 @@ class WI_Volunteer_Management_Public {
 	      'capability_type'   => 'post',
 	      'supports'          => array( 'title', 'editor', 'thumbnail', 'revisions'  ),
 	      'rewrite'           => array( 'slug' => apply_filters( 'wivm_opp_rewrite', 'volunteer-opportunity' ), 'with_front' => false )
-	    ); 
-	    
+	    );
+
 	    register_post_type( 'volunteer_opp', $args );
 	}
 
@@ -156,12 +156,12 @@ class WI_Volunteer_Management_Public {
           	'meta_query' => array(
 				array( //Only if one-time opp is true
 					'key'     => '_one_time_opp',
-					'value'   => 1, 
+					'value'   => 1,
 					'compare' => '==',
 				),
 				array( //Only if event is in the future
 					'key'     => '_start_date_time',
-					'value'   => current_time( 'timestamp' ), 
+					'value'   => current_time( 'timestamp' ),
 					'compare' => '>=',
 				),
 				'relation' => 'AND'
@@ -169,22 +169,45 @@ class WI_Volunteer_Management_Public {
 			'paged' => $paged
 		);
 
-		return $this->display_volunteer_opp_list( 'one-time', apply_filters( $this->plugin_name . '_one_time_opp_shortcode_query', $args ) );		
+		return $this->display_volunteer_opp_list( 'one-time', apply_filters( $this->plugin_name . '_one_time_opp_shortcode_query', $args ) );
 	}
 
 	/**
 	 * Shortcode for viewing all flexible volunteer opportunities.
 	 */
 	public function display_flexible_volunteer_opps(){
+		//BP: Updated flexible and one-time queries to match
+		// $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+		// $args = array(
+		// 	'post_type' => 'volunteer_opp',
+    //       	'meta_query' => array(
+		// 		array( //Only if one-time opp is not true
+		// 			'key'     => '_one_time_opp',
+		// 			'value'   => 1,
+		// 			'compare' => '!=',
+		// 		),
+		// 	),
+		// 	'paged' => $paged
+		// );
+
 		$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
-		$args = array(
+		$args  = array(
 			'post_type' => 'volunteer_opp',
+			'meta_key' => '_start_date_time',
+          	'orderby' => 'meta_value_num',
+          	'order'   => 'ASC',
           	'meta_query' => array(
-				array( //Only if one-time opp is not true
+				array( //Only if one-time opp is true
 					'key'     => '_one_time_opp',
-					'value'   => 1, 
+					'value'   => 1,
 					'compare' => '!=',
 				),
+				array( //Only if event is in the future
+					'key'     => '_start_date_time',
+					'value'   => current_time( 'timestamp' ),
+					'compare' => '>=',
+				),
+				'relation' => 'AND'
 			),
 			'paged' => $paged
 		);
@@ -215,7 +238,7 @@ class WI_Volunteer_Management_Public {
 
 			return $text . '&hellip;' . $link;
 		}
-		
+
 		return $text;
 	}
 
@@ -243,9 +266,9 @@ class WI_Volunteer_Management_Public {
 	 *
 	 * Displays the volunteer opportunities lists for both the one-time and flexible
 	 * opportunities. It also calls template files to output the majority of the HTML.
-	 * 
+	 *
 	 * @param  string $list_type One-time or flexible volunteer opportunities
-	 * @param  array $query_args The query arguments to be used in WP_Query 
+	 * @param  array $query_args The query arguments to be used in WP_Query
 	 * @return string            HTML code to be output via a shortcode.
 	 */
 	public function display_volunteer_opp_list( $list_type, $query_args ){
@@ -255,10 +278,10 @@ class WI_Volunteer_Management_Public {
 		$wp_query = new WP_Query( $query_args );
 
 		ob_start(); ?>
-		
+
 		<div class="volunteer-opps <?php echo $list_type; ?>">
 
-			<?php 
+			<?php
 			$template_loader = new WI_Volunteer_Management_Template_Loader();
 			if( $wp_query->have_posts() ){
 
@@ -266,8 +289,8 @@ class WI_Volunteer_Management_Public {
 					$wp_query->the_post();
 					$template_loader->get_template_part( 'opps-list', $list_type );
 				}
-				
-			} 
+
+			}
 			else { ?>
 
 				<p class="no-opps"><?php _e( 'Sorry, there are no volunteer opportunities available right now.', 'wired-impact-volunteer-management' ); ?></p>
@@ -282,10 +305,10 @@ class WI_Volunteer_Management_Public {
 		</div><!-- .volunteer-opps -->
 
 		<?php
-		//Reset to default query 
-		$wp_query = null; 
+		//Reset to default query
+		$wp_query = null;
   		$wp_query = $temp;
-  		wp_reset_postdata(); 
+  		wp_reset_postdata();
 
 		return ob_get_clean();
 	}
@@ -337,7 +360,7 @@ class WI_Volunteer_Management_Public {
 			die();
 		}
 
-		//If the honeypot field exists and is filled out then bail 
+		//If the honeypot field exists and is filled out then bail
 		if( isset( $form_fields['wivm_hp'] ) && $form_fields['wivm_hp'] != '' ){
 			_e( 'Security Check.', 'wired-impact-volunteer-management' );
 			die();
@@ -372,8 +395,8 @@ class WI_Volunteer_Management_Public {
 		}
 
 		//Return a message which tells us what messages to show on the frontend
- 		echo $result; 
- 		
+ 		echo $result;
+
  		die(); //Must use die() when using AJAX
 	}
 
@@ -383,7 +406,7 @@ class WI_Volunteer_Management_Public {
 	 * This method is called using cron and is never called in any other way. This
 	 * method must be provided in the public class since the admin class is not
 	 * loaded when cron is run.
-	 * 
+	 *
 	 * @param  int $opp_id Volunteer opportunity ID.
 	 */
 	public function send_email_reminder( $opp_id ){

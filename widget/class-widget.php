@@ -51,16 +51,38 @@ class WI_Volunteer_Management_Widget extends WP_Widget {
       if( $list_type === 'flexible' ) {
 
          // Query for flexible volunteer opportunities
-         $posts_args = array(
+        //  $posts_args = array(
+        //     'posts_per_page' => $num_of_opps,
+        //     'post_type' => 'volunteer_opp',
+        //     'post_status' => 'publish',
+        //     'meta_query' => array(
+        //        array(
+        //        'key' => '_one_time_opp',
+        //        'value' => 1,
+        //        'compare' => '!='
+        //        )
+        //     )
+        //  );
+        // BP: Pulled in all the fields from the one-time opportunity query to have events fall off the signup if it is a past event
+          $posts_args = array(
             'posts_per_page' => $num_of_opps,
             'post_type' => 'volunteer_opp',
             'post_status' => 'publish',
+            'meta_key' => '_start_date_time',
+            'orderby' => 'meta_value_num',
+            'order'   => 'ASC',
             'meta_query' => array(
                array(
-               'key' => '_one_time_opp',
-               'value' => 1,
-               'compare' => '!='
-               )
+               'key'     => '_one_time_opp',
+               'value'   => 1,
+               'compare' => '!=',
+               ),
+               array( //Only if event is in the future
+               'key'     => '_start_date_time',
+               'value'   => current_time( 'timestamp' ),
+               'compare' => '>=',
+               ),
+            'relation' => 'AND'
             )
          );
 
@@ -110,9 +132,9 @@ class WI_Volunteer_Management_Widget extends WP_Widget {
          if ( $all_opps_page_link !== false ) { ?>
             <a href="<?php echo $all_opps_page_link; ?>"> <?php
          }
-         
+
          echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
-         
+
          if ( $all_opps_page_link !== false ) { ?>
             </a> <?php
          }
@@ -132,7 +154,7 @@ class WI_Volunteer_Management_Widget extends WP_Widget {
 
             <p><a href="<?php echo $all_opps_page_link; ?>"><?php _e( 'View All', 'wired-impact-volunteer-management' ); ?></a></p>
 
-         <?php } 
+         <?php }
 
       } else { ?>
 
@@ -170,7 +192,7 @@ class WI_Volunteer_Management_Widget extends WP_Widget {
          $num_of_opps = esc_attr( $instance['number_of_opps_input'] );
       } else {
          $num_of_opps = 1;
-      }   
+      }
 
       ?>
 
@@ -235,7 +257,7 @@ class WI_Volunteer_Management_Widget extends WP_Widget {
     *
     * This is done by finding where the [one_time_volunteer_opps] or the [flexible_volunteer_opps]
     * shortcode is being used. We do this by querying the post content in the database.
-    * 
+    *
     * @param  string $shortcode The shortcode string we want to search for in the database
     * @return mixed Permalink string if post found, or false if not
     */
