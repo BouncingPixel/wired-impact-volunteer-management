@@ -9,7 +9,7 @@ $opp = new WI_Volunteer_Management_Opportunity( $post->ID ); //Get volunteer opp
 ?>
 
 <div class="volunteer-opp-info">
-	<?php $opp->display_meta( ( $opp->opp_meta['one_time_opp'] == 1 ) ? $opp->format_opp_times() : $opp->opp_meta['flexible_frequency'], __( 'When:', 'wired-impact-volunteer-management' ) ); ?>
+	<?php $opp->display_meta( ( $opp->opp_meta['one_time_opp'] == 1 ) ? $opp->format_opp_times() : $opp->format_opp_times(), __( 'When:', 'wired-impact-volunteer-management' ) ); ?>
 	<?php $opp->display_meta( $opp->format_address(), 										__( 'Where:', 'wired-impact-volunteer-management' ) ); ?>
 
 	<?php $opp->display_meta( $opp->opp_meta['contact_name'], 								__( 'Contact:', 'wired-impact-volunteer-management' ) ); ?>
