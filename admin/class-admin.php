@@ -937,7 +937,7 @@ class WI_Volunteer_Management_Admin {
 				$query->query_vars['meta_query'] = array( $query_args );
 
 				// Set one-time opp date based queries
-				// BP: remove if statement so all opportunities are <sorted></sorted>
+				// BP: remove if statement so all opportunities are sorted
 				// if ( 'flexible' != $_GET['opportunities'] ) {
 					$date_args = array(
 						'key' 		=> '_end_date_time',
@@ -1088,7 +1088,10 @@ class WI_Volunteer_Management_Admin {
 		//Gather cron info.  We have to convert everything to GMT since WP Cron sends based on GMT.
 		$cron_hook = 'send_auto_email_reminders';
 		$cron_args = array( $opp_id );
-		if ( $opp->opp_meta['one_time_opp'] == 1 && $opp->opp_meta['start_date_time'] != '' ){
+		// if ( $opp->opp_meta['one_time_opp'] == 1 && $opp->opp_meta['start_date_time'] != '' ){
+			//BP - Removed one_time_opp check so that both events and practices will send reminders
+		if ($opp->opp_meta['start_date_time'] != '' ){
+
 			$start_date_time_gmt = strtotime( get_gmt_from_date( date( 'Y-m-d H:i:s', $opp->opp_meta['start_date_time'] ) ) . ' GMT' );
 
 			$options = new WI_Volunteer_Management_Options();
@@ -1103,9 +1106,15 @@ class WI_Volunteer_Management_Admin {
 		//Don't schedule the reminder under certain circumstances
 		if (
 			$post->post_status != 'publish' || //If opportunity isn't published
-			$opp->opp_meta['one_time_opp'] == 0 || //If opportunity is not at a specific date and time
+
+			// BP - Remove extra check for one_time_opp
+			// $opp->opp_meta['one_time_opp'] == 0 || //If opportunity is not at a specific date and time
+
+			//BP - Adding a check for days_prior_reminder
+			$days_prior_reminder == '' || $days_prior_reminder == null ||
+
 			$opp->opp_meta['start_date_time'] == '' || //If there is no start date for the opportunity
- 			$current_time > $new_reminder_time //If the current time is passed the new reminder time
+			$current_time > $new_reminder_time //If the current time is passed the new reminder time
 		) {
 			return false;
 		}
