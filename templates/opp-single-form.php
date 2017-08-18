@@ -40,6 +40,11 @@ $use_honeypot = $options->get_option( 'use_honeypot' );
 	<label for="wivm_email"><?php _e( 'Email:', 'wired-impact-volunteer-management' ); ?></label>
 	<input type="email" tabindex="930" id="wivm_email" name="wivm_email" value="" />
 
+	<!-- BP: Added a comment field  -->
+	<label for="wivm_comment"><?php _e( 'Comment:', 'wired-impact-volunteer-management' ); ?></label>
+	<input type="text" tabindex="940" id="wivm_comment" name="wivm_comment" value="" />
+
+
 	<?php if( $use_honeypot == 1 ): ?>
 	<label for="wivm_hp" class="wivm_hp"><?php _e( 'Name:', 'wired-impact-volunteer-management' ); ?></label>
 	<input type="text" tabindex="940" class="wivm_hp" id="wivm_hp" name="wivm_hp" value=""  autocomplete="off" />

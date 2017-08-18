@@ -39,7 +39,8 @@
 		}
 
 		//Make sure each field is filled in and that email addresses are valid
-		$( '#wivm-sign-up-form input[type=text]:not(#wivm_hp), #wivm-sign-up-form input[type=email]' ).each(function() {
+		// BP: Excluding comments to make it an optional field
+		$( '#wivm-sign-up-form input[type=text]:not(#wivm_hp):not(#wivm_comment), #wivm-sign-up-form input[type=email]' ).each(function() {
             if( this.value === '' ) {
                 $( this ).addClass( 'field-error' );
                 has_errors = true;
@@ -67,7 +68,7 @@
 
 	/**
 	 * Validates a provided email address.
-	 * 
+	 *
 	 * @param  {string} email The provided email address.
 	 * @return {bool}   	  Whether the provided email address is valid.
 	 */
@@ -98,7 +99,7 @@
 			function( response ){
 
 				$( '.volunteer-opp-message.loading' ).slideUp();
-				
+
 				//If submitter was RSVPed successfully
 				if( response === 'rsvped' ){
 					$( '.volunteer-opp-message.success' ).slideDown();

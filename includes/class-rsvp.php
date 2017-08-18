@@ -23,7 +23,7 @@ class WI_Volunteer_Management_RSVP {
 
 	/**
 	 * Whether the person has been rsvped to volunteer or not.
-	 * 
+	 *
 	 * @since    0.1
 	 * @var bool True if the person's RSVP completed successfully, false on error or if the person had previously RSVPed for this opportunity and shouldn't be added again.
 	 */
@@ -34,17 +34,17 @@ class WI_Volunteer_Management_RSVP {
 	 *
 	 * @since    0.1
 	 */
-	public function __construct( $user_id = null, $opportunity_id = null ) {
+	public function __construct( $user_id = null, $opportunity_id = null, $comment = null ) {
 
 		if( $user_id != null && $opportunity_id != null ){
-			$this->rsvped = $this->save_rsvp( $user_id, $opportunity_id );
+			$this->rsvped = $this->save_rsvp( $user_id, $opportunity_id, $comment );
 		}
 
 	}
 
 	/**
 	 * Via ajax save the RSVP for this volunteer.
-	 * 
+	 *
 	 * Via ajax we save the RSVP for this volunteer to our volunteer_rsvps table. We only
 	 * update the table if the user is RSVPing for the first time.
 	 *
@@ -52,7 +52,7 @@ class WI_Volunteer_Management_RSVP {
 	 * @param  int $opportunity_id Post ID of this volunteer opportunity.
 	 * @return bool true means successfully RSVPed, false means they already signed up.
 	 */
-	public function save_rsvp( $user_id, $opportunity_id ){
+	public function save_rsvp( $user_id, $opportunity_id, $comment ){
 
 		$user_id = absint( $user_id );
 		$opportunity_id = absint( $opportunity_id );
@@ -64,6 +64,7 @@ class WI_Volunteer_Management_RSVP {
 		$time = current_time( 'mysql' );
 
 		//Insert data into database if this is a new RSVP.
+		//BP: Added comment to db write
 		if( $volunteer_rsvp_status === false ){
 			$wpdb->insert(
 		        $table_name,
@@ -71,9 +72,10 @@ class WI_Volunteer_Management_RSVP {
 		        	'user_id' 	=> $user_id,
 		        	'post_id' 	=> $opportunity_id,
 		        	'rsvp' 		=> $rsvp,
-		        	'time' 		=> $time
+							'time' 		=> $time,
+		        	'comment' 		=> $comment
 		        ),
-		        array( '%d', '%d', '%d', '%s' ) //All of these should be saved as integers except for the current date-time
+		        array( '%d', '%d', '%d', '%s', '%s' ) //All of these should be saved as integers except for the current date-time
 			);
 
 			$result = true; //Successfully RSVPed
@@ -97,10 +99,10 @@ class WI_Volunteer_Management_RSVP {
 			$result = true; //Successfully RSVPed
 		}
 		//This person is already RSVPed for this opportunity
-		else { 
+		else {
 			$result = false;
 		}
-		
+
 		do_action( 'wivm_after_opp_rsvp', $user_id, $opportunity_id );
 
 		return $result;

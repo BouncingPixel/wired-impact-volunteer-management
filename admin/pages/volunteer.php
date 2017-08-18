@@ -2,7 +2,7 @@
 
 /**
  * Output the HTML for our individual volunteer page.
- * 
+ *
  * Utilizes the WI_Volunteer_Management_Volunteer class to pull the volunteer's information.
  *
  * @link       http://wiredimpact.com
@@ -25,14 +25,14 @@ $volunteer = new WI_Volunteer_Management_Volunteer( $volunteer_id );
 	<h2><?php echo __( 'Volunteer: ', 'wired-impact-volunteer-management' ) . $volunteer->meta['first_name'] . ' ' . $volunteer->meta['last_name']; ?></h2>
 
 	<div class="volunteer-info">
-		
+
 		<div class="contact-info">
 
 			<?php echo get_avatar( $volunteer->ID, 65 ); ?>
 			<span><?php echo __( 'E-mail:', 'wired-impact-volunteer-management' ) . ' ' . $volunteer->meta['email']; ?></span>
 			<span><?php echo __( 'Phone:', 'wired-impact-volunteer-management' ) . ' ' . $volunteer->meta['phone']; ?></span>
 			<span><?php echo __( 'Volunteer since', 'wired-impact-volunteer-management' ) . ' ' . mysql2date( 'Y', $volunteer->meta['first_volunteer_opp_time'] ); ?></span>
-		
+
 		</div>
 
 		<div class="volunteer-notes">
@@ -51,13 +51,13 @@ $volunteer = new WI_Volunteer_Management_Volunteer( $volunteer_id );
 			</a>
 			<?php endif; ?>
 		</div>
-	
+
 	</div><!-- .volunteer-info -->
 
 	<div class="volunteer-opps-wrapper">
 
-		<h1><?php _e( 'Volunteer Opportunities', 'wired-impact-volunteer-management' ); ?> <span>(<?php echo $volunteer->meta['num_volunteer_opps']; ?>)</span></h1>
-		
+		<h1><?php _e( 'Past events', 'wired-impact-volunteer-management' ); ?> <span>(<?php echo $volunteer->meta['num_volunteer_opps']; ?>)</span></h1>
+
 		<div class="opps one-time">
 
 			<?php
@@ -68,7 +68,7 @@ $volunteer = new WI_Volunteer_Management_Volunteer( $volunteer_id );
 			$last_opp_start = 0; //Start at zero to "Today" doesn't show at the top
 			?>
 
-			<h2><?php echo __( 'One-Time Volunteer Opportunities', 'wired-impact-volunteer-management' ) . ' (' . count( $opps ) . ')'; ?></h2>
+			<h2><?php echo __( 'Practices', 'wired-impact-volunteer-management' ) . ' (' . count( $opps ) . ')'; ?></h2>
 
 			<?php foreach ( $opps as $opp ){ ?>
 
@@ -91,7 +91,7 @@ $volunteer = new WI_Volunteer_Management_Volunteer( $volunteer_id );
 
 			<?php $opps = $volunteer->get_volunteer_opps( 'flexible' ); ?>
 
-			<h2><?php echo __( 'Flexible Volunteer Opportunities', 'wired-impact-volunteer-management' ) . ' (' . count( $opps ) . ')'; ?></h2>
+			<h2><?php echo __( 'Events', 'wired-impact-volunteer-management' ) . ' (' . count( $opps ) . ')'; ?></h2>
 
 			<?php foreach ( $opps as $opp ){ ?>
 

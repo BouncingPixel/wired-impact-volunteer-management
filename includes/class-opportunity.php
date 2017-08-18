@@ -143,12 +143,13 @@ class WI_Volunteer_Management_Opportunity {
 	 * @return string A string of the date and time, or the frequency of the opportunity.
 	 */
 	public function get_one_date_time(){
-		if( $this->opp_meta['one_time_opp'] == 1 ){
+		//bp: remove if statement so that both types of emails will receieve the start_end date
+		// if( $this->opp_meta['one_time_opp'] == 1 ){
 			return $this->format_opp_times( $this->opp_meta['start_date_time'], $this->opp_meta['end_date_time'] );
-		}
-		else {
-			return $this->opp_meta['flexible_frequency'];
-		}
+		// }
+		// else {
+			// return $this->opp_meta['flexible_frequency'];
+		// }
 	}
 
 	/**
@@ -380,7 +381,7 @@ class WI_Volunteer_Management_Opportunity {
 		global $wpdb;
 
 		$query = "
-		         SELECT user_id
+		         SELECT user_id, comment
 		         FROM " . $wpdb->prefix  . "volunteer_rsvps
 		         WHERE post_id = %d AND rsvp = %d
 		         ORDER BY time DESC
@@ -392,9 +393,12 @@ class WI_Volunteer_Management_Opportunity {
 
 		//Use the user id to grab a bunch info on each volunteer and store in the same variable using &.
 		foreach( $volunteers as &$volunteer ){
+			//Save comment from query
+			$comment = $volunteer->comment;
 			$volunteer = new WI_Volunteer_Management_Volunteer( $volunteer->user_id );
+			//Added the comment property
+			$volunteer->meta["comment"] = $comment;
 		}
-
 		return $volunteers;
 	}
 

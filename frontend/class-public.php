@@ -373,7 +373,7 @@ class WI_Volunteer_Management_Public {
 			$user = new WI_Volunteer_Management_Volunteer( null, $form_fields );
 
 			//RSVP this volunteer for the opportunity
-			$rsvp = new WI_Volunteer_Management_RSVP( $user->ID, $form_fields['wivm_opportunity_id'] );
+			$rsvp = new WI_Volunteer_Management_RSVP( $user->ID, $form_fields['wivm_opportunity_id'], $form_fields['wivm_comment'] );
 
 			//If the person hadn't already RSVPed then send out the signup emails.
 			if( $rsvp->rsvped == true ){
