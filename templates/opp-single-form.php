@@ -42,7 +42,7 @@ $use_honeypot = $options->get_option( 'use_honeypot' );
 
 	<!-- BP: Added a comment field  -->
 	<label for="wivm_comment"><?php _e( 'Comment:', 'wired-impact-volunteer-management' ); ?></label>
-	<input type="text" tabindex="940" id="wivm_comment" name="wivm_comment" value="" />
+	<input type="text" tabindex="940" id="wivm_comment" name="wivm_comment" value="" maxlength="255" />
 
 
 	<?php if( $use_honeypot == 1 ): ?>
